@@ -8,7 +8,94 @@ window.createExercises = (options) => {
             }, delay);
         };
     };
-    const { items } = options;
+    const {items} = options;
+    const processValidation = (item, $itemContent, $answer) => {
+        const $feedback = $itemContent.find('.exercise-feedback');
+        const triggerSelector = $answer.attr('data-trigger') || '.submit';
+        const $mask = $answer.find('.mask');
+        const messages = {
+            success: 'Woo hoo! You get it right! Awesome',
+            error: 'Oops! It does not look right! Try again :D'
+        };
+        const showFeedback = (type, message) => {
+            let removedClasses = 'alert-success alert-info';
+
+            if (type === 'info') {
+                removedClasses = 'alert-danger alert-success';
+            } else if (type === 'success') {
+                removedClasses = 'alert-danger alert-info';
+            }
+
+            $feedback
+                .removeClass(removedClasses)
+                .addClass(`alert-${type === 'error' ? 'danger' : type}`)
+                .text(message)
+                .fadeIn();
+        };
+        const data = {
+            validateIdx: 0,
+        };
+
+        $answer.find(triggerSelector)
+            .on('click', (event) => {
+                $mask.removeClass('d-none');
+
+                if ($.isPlainObject(item.validate) && $.isFunction(item.validate.beforeValidate)) {
+                    item.validate.beforeValidate($answer, {event, data});
+                } else if ($.isArray(item.validate) && $.isFunction(item.validate[data.validateIdx].beforeValidate)) {
+                    item.validate[data.validateIdx].beforeValidate($answer, {event, data});
+                }
+            })
+            .on('click', debounce((event) => {
+                $feedback.hide();
+
+                if ($.isArray(item.validate)) {
+                    const curValidation = item.validate[data.validateIdx];
+                    let result = curValidation.validate($answer, {event, data});
+
+                    if (result === true || ($.isPlainObject(result) && result.success)) {
+                        data.validateIdx++;
+
+                        if (data.validateIdx === item.validate.length) {
+                            data.validateIdx = 0;
+                            showFeedback('success', messages.success);
+                        } else {
+                            showFeedback('info', result?.message || `${messages.success}. Let's do the next step.`);
+                        }
+                    } else {
+                        if ($.isPlainObject(result) && !result.success) {
+                            showFeedback('error', result?.message || messages.error);
+                        } else if (typeof result === 'string') {
+                            showFeedback('error', result || messages.error);
+                        } else {
+                            showFeedback('error', messages.error);
+                        }
+                    }
+                } else {
+                    let validate;
+
+                    if ($.isFunction(item.validate)) {
+                        validate = item.validate;
+                    } else if ($.isPlainObject(item.validate) && $.isFunction(item.validate.validate)) {
+                        validate = item.validate.validate;
+                    }
+
+                    if (validate) {
+                        const result = validate($answer, {event, data});
+
+                        if (result === true) {
+                            showFeedback('success', messages.success);
+                        } else if (result === false) {
+                            showFeedback('error', messages.error);
+                        } else if (typeof result === 'string') {
+                            showFeedback('error', result);
+                        }
+                    }
+                }
+
+                $mask.addClass('d-none');
+            }, item.validateDelay || 10));
+    };
     const make = (item, idx) => {
         const id = item.id || `exercise-${idx + 1}`;
         let $content = $(`#${id}`);
@@ -49,11 +136,15 @@ window.createExercises = (options) => {
             $itemContent.append(`
                 <div class="alert alert-info mt-3 search-phrases">
                     <div class="text-muted fst-italic me-2">Use <b>Google</b> or <b>Open AI</b> to search for:</div>
-                    <ol class="m-0 mt-2">
-                        ${item.searchPhrases.map((pharse) => `<li>${pharse}</li>`)}                                            
-                    </ol>
+                    <ol class="search-pharses m-0 mt-2" />
                 </div>
             `);
+
+            const $searchPhrases = $itemContent.find('.search-pharses');
+
+            item.searchPhrases.map((pharse) => {
+                $searchPhrases.append(`<li>${pharse}</li>`);
+            });
         }
 
         if (!item.validate) {
@@ -69,44 +160,12 @@ window.createExercises = (options) => {
         $itemContent.append(`
             <div class="exercise-feedback alert mt-2" style="display: none;"></div>
         `);
-        const $feedback = $itemContent.find('.exercise-feedback');
         const $answer = $content.find('.answer');
-        const triggerSelector = $answer.attr('data-trigger') || '.submit';
 
         // Add mask to prevent multi clicks
         $answer.addClass('position-relative').append('<div class="mask bg-light opacity-25 d-none position-absolute top-0 bottom-0 start-0 end-0" style="z-index:9999;"/>');
-        const $mask = $answer.find('.mask');
 
-        let validationData;
-
-        if (item.beforeValidate) {
-            $answer.find(triggerSelector).on('click', (event) => {
-                validationData = item.beforeValidate($answer, { event });
-                $mask.removeClass('d-none');
-            });
-        }
-
-        $answer.find(triggerSelector).on('click', debounce((event) => {
-            const result = item.validate($answer, { event, data: validationData });
-
-            $feedback.hide();
-
-            if (result) {
-                $feedback
-                    .removeClass('alert-danger')
-                    .addClass('alert-success')
-                    .text('Woo hoo! You get it right! Awesome')
-                    .fadeIn();
-            } else {
-                $feedback
-                    .removeClass('alert-success')
-                    .addClass('alert-danger')
-                    .text('Oops! It does not look right! Try again :D')
-                    .fadeIn();
-            }
-
-            $mask.addClass('d-none');
-        }, item.validateDelay || 200));
+        processValidation(item, $itemContent, $answer);
 
         return $item;
     }

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Test</title>
+    <meta name="robots" content="noindex">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           crossorigin="anonymous">
@@ -14,7 +15,7 @@
 <div id="exercise-1" class="exercise">
     <div class="answer" data-trigger="button">
         <p class="exercise-1-text">Original text</p>
-        <button class="button-1">Click me to change text</button>
+        <button class="exercise-button-1">Click me to change text</button>
     </div>
 </div>
 
@@ -22,14 +23,14 @@
     <div class="answer" data-trigger="button">
         <img class="exercise-2-img" src="https://cdn-icons-png.flaticon.com/128/2004/2004580.png"/>
         <div>
-            <button>Toggle image visibility</button>
+            <button class="exercise-button-2">Toggle image visibility</button>
         </div>
     </div>
 </div>
 
 <div id="exercise-3" class="exercise">
     <div class="answer" data-trigger="button">
-        <button class="btn btn-primary">Toggle button class</button>
+        <button class="exercise-button-3 btn btn-primary">Toggle button class</button>
     </div>
 </div>
 
@@ -38,14 +39,14 @@
         <div>
             Counter: <span class="exercise-4-counter">0</span>
         </div>
-        <button>- Decrease</button>
-        <button>+ Increase</button>
+        <button class="exercise-button-4-decrease">- Decrease</button>
+        <button class="exercise-button-4-increase">+ Increase</button>
     </div>
 </div>
 
 <div id="exercise-5" class="exercise">
     <div class="answer" data-trigger="button">
-        <button>Toggle slide animation</button>
+        <button class="exercise-button-5">Toggle slide animation</button>
         <div class="exercise-5-text bg-warning mt-1">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus risus convallis nulla mollis molestie. In suscipit quam vitae blandit tincidunt. Duis volutpat varius felis, ac dignissim massa mollis placerat. Sed ipsum erat, pellentesque luctus pharetra vel, iaculis in mauris. Fusce non lectus non neque tristique varius id id lectus. Nulla justo sem, bibendum ac malesuada vitae, gravida ac dolor. Praesent accumsan sapien eget elementum lacinia. Duis rhoncus, tellus in tincidunt hendrerit, velit dui molestie augue, vitae placerat erat mauris id velit. Mauris arcu nisl, aliquet sit amet leo vitae, malesuada placerat leo. Proin massa enim, bibendum et elementum quis, pellentesque ut tortor. Sed ac convallis justo. Nullam eu feugiat tellus.
         </div>
@@ -57,16 +58,16 @@
         <div class="container">
             <div class="row gap-2">
                 <div class="col">
-                    <button>Close</button>
-                    <ul class="bg-warning mt-2">
+                    <button class="exercise-6-button">Close</button>
+                    <ul class="exercise-6-list bg-warning mt-2">
                         <li>Item 1</li>
                         <li>Item 2</li>
                         <li>Item 3</li>
                     </ul>
                 </div>
                 <div class="col">
-                    <button>Close</button>
-                    <ul class="bg-warning mt-2">
+                    <button class="exercise-6-button">Close</button>
+                    <ul class="exercise-6-list bg-warning mt-2">
                         <li>Item 1</li>
                         <li>Item 2</li>
                         <li>Item 3</li>
@@ -75,8 +76,8 @@
                     </ul>
                 </div>
                 <div class="col">
-                    <button>Close</button>
-                    <ul class="bg-warning mt-2">
+                    <button class="exercise-6-button">Close</button>
+                    <ul class="exercise-6-list bg-warning mt-2">
                         <li>Item 1</li>
                         <li>Item 2</li>
                         <li>Item 3</li>
@@ -89,7 +90,7 @@
 
 <div id="exercise-7" class="exercise">
     <div class="answer" data-trigger="button">
-        <button>Add new elements</button>
+        <button class="exercise-7-button">Add new elements</button>
         <ol class="exercise-7-list bg-warning mt-1">
         </ol>
     </div>
@@ -104,6 +105,9 @@
                 description: `
                 <div>When the button is clicked, use jQuery to change the text of the paragraph from <code>Original text</code> to <code>Text changed</code></div>
                 `,
+                searchPhrases: [
+                    'Set element text using jQuery'
+                ],
                 validate: ($answer) => $answer.find('.exercise-1-text').text() === 'Text changed'
             },
             {
@@ -111,29 +115,72 @@
                 description: `
                 <div>When the button is clicked, use jQuery to hide the image, and when clicked again, show the image.</div>
                 `,
-                beforeValidate($answer) {
-                    return {
-                        prevVisible: $answer.find('.exercise-2-img').is(':visible')
-                    };
-                },
-                validate($answer, { data }) {
-                    return $answer.find('.exercise-2-img').is(':visible') !== data.prevVisible;
-                }
+                searchPhrases: [
+                    'Check if element is visible using jQuery',
+                    'Hide element using jQuery',
+                    'Show element using jQuery',
+                ],
+                validate: [
+                    {
+                        validate: ($answer) => {
+                            if (!$answer.find('.exercise-2-img').is(':visible')) {
+                                return {
+                                    success: true,
+                                    message: 'Great, the image is now invisible'
+                                }
+                            }
+
+                            return {
+                                success: false,
+                                message: 'Oops, the image is still visible!'
+                            }
+                        },
+                    },
+                    {
+                        validate: ($answer) => !!$answer.find('.exercise-2-img').is(':visible'),
+                    }
+                ],
             },
             {
                 title: 'Toggle element class',
                 description: `
                 <div>When the button is clicked, toggle its class in this order <code>btn-primary</code> > <code>btn-secondary</code> > <code>btn-danger</code> > <code>btn-warning</code> then go back to <code>btn-primary</code></div>
                 `,
-                validate($answer) {
-                }
+                validate: [
+                    {
+                        validate: ($answer) => !!$answer.find('.btn-secondary').length
+                    },
+                    {
+                        validate: ($answer) => !!$answer.find('.btn-danger').length
+                    },
+                    {
+                        validate: ($answer) => !!$answer.find('.btn-warning').length
+                    },
+                    {
+                        validate: ($answer) => !!$answer.find('.btn-primary').length
+                    }
+                ]
             },
             {
                 title: 'Simple event handling',
                 description: `
                 <div>Each time the buttons are clicked, use jQuery to increment or decrement the counter and update the counter's text.</div>
                 `,
-                validate($answer, { data }) {
+                validate: {
+                    beforeValidate($answer, { data }) {
+                        data.prevCount = parseInt($answer.find('.exercise-4-counter').text().trim());
+                    },
+                    validate($answer, { event, data }) {
+                        const curCount = parseInt($answer.find('.exercise-4-counter').text().trim());
+
+                        if (event.currentTarget.classList.contains('exercise-button-4-decrease')) {
+                            return curCount < data.prevCount;
+                        } else if (event.currentTarget.classList.contains('exercise-button-4-increase')) {
+                            return curCount > data.prevCount;
+                        }
+
+                        return false;
+                    }
                 }
             },
             {
@@ -144,8 +191,27 @@
                 searchPhrases: [
                     'Slide animation using jQuery'
                 ],
-                validate($answer) {
-                }
+                validateDelay: 500,
+                validate: [
+                    {
+                        validate: ($answer) => {
+                            if (!$answer.find('.exercise-5-text').is(':visible')) {
+                                return {
+                                    success: true,
+                                    message: 'Great, the paragraph is now invisible'
+                                }
+                            }
+
+                            return {
+                                success: false,
+                                message: 'Oops, the paragraph is still visible!'
+                            }
+                        },
+                    },
+                    {
+                        validate: ($answer) => !!$answer.find('.exercise-5-text').is(':visible'),
+                    }
+                ]
             },
             {
                 title: 'Dropdown list',
@@ -155,7 +221,50 @@
                 searchPhrases: [
                     'Fade animation using jQuery'
                 ],
-                validate($answer) {
+                validateDelay: 500,
+                validate: {
+                    beforeValidate($answer, {event, data}) {
+                        const $btn = $(event.currentTarget);
+                        const $list = $btn.next('ul');
+
+                        data.items = data.items || [];
+
+                        const matchedItem = data.items.filter((item) => {
+                            return item.el === event.currentTarget;
+                        })[0];
+
+                        if (!matchedItem) {
+                            data.items.push({
+                                el: event.currentTarget,
+                                prevVisible: $list.is(':visible')
+                            });
+                        } else {
+                            matchedItem.prevVisible = $list.is(':visible');
+                        }
+                    },
+                    validate($answer, { event, data }) {
+                        const $btn = $(event.currentTarget);
+                        const $list = $btn.next('ul');
+                        const matchedItem = data.items.filter((item) => {
+                            return item.el === event.currentTarget;
+                        })[0];
+                        const isVisible = $list.is(':visible');
+                        const expectedVisible = matchedItem.prevVisible !== isVisible;
+
+                        if (!expectedVisible) {
+                            return 'The list visibility state is not correct';
+                        }
+
+                        if (isVisible && $btn.text() !== 'Close') {
+                            return 'The button text should be "Open"';
+                        }
+
+                        if (!isVisible && $btn.text() !== 'Open') {
+                            return 'The button text should be "Close"';
+                        }
+
+                        return true;
+                    }
                 }
             },
             {
@@ -167,17 +276,121 @@
                 searchPhrases: [
                     'Append new element using jquery" and "Remove element using jquery'
                 ],
-                validate($answer) {
+                validate: {
+                    beforeValidate($answer, {data}) {
+                        data.prevCount = $answer.find('li').length;
+                    },
+                    validate($answer, {event, data}) {
+                        const count = $answer.find('li').length;
+
+                        if (count > 20) {
+                            return 'Wrong, the number of <code>li</code> elements should not be more than 20';
+                        }
+
+                        if (data.prevCount === 20 && count === 0) {
+                            return true;
+                        }
+
+                        if (data.prevCount + 4 !== count) {
+                            return 'The number of new <code>li</code> elements is not 4'
+                        }
+
+                        return true;
+                    }
                 }
             }
         ]
     };
-
-    window.createExercises(exercises);
 </script>
 
 <script>
+    window.createExercises(exercises);
 
+    $('.exercise-button-1').on('click', function () {
+        $('.exercise-1-text').text('Text changed');
+    });
+
+    $('.exercise-button-2').on('click', function () {
+        const $img = $('.exercise-2-img');
+
+        if ($img.is(':visible')) {
+            $img.hide();
+        } else {
+            $img.show();
+        }
+    });
+
+    $('.exercise-button-3').on('click', function () {
+        const $button = $(this);
+
+        if ($button.hasClass('btn-primary')) {
+            $button
+                .removeClass('btn-primary')
+                .addClass('btn-secondary');
+        } else if ($button.hasClass('btn-secondary')) {
+            $button
+                .removeClass('btn-secondary')
+                .addClass('btn-danger');
+        } else if ($button.hasClass('btn-danger')) {
+            $button
+                .removeClass('btn-danger')
+                .addClass('btn-warning');
+        } else if ($button.hasClass('btn-warning')) {
+            $button
+                .removeClass('btn-warning')
+                .addClass('btn-primary');
+        }
+    });
+
+    $('.exercise-button-4-decrease').on('click', function () {
+        const $counter = $('.exercise-4-counter');
+        const currentCount = parseInt($counter.text(), 10);
+
+        $counter.text(currentCount - 1);
+    });
+
+    $('.exercise-button-4-increase').on('click', function () {
+        const $counter = $('.exercise-4-counter');
+        const currentCount = parseInt($counter.text(), 10);
+
+        $counter.text(currentCount + 1);
+    });
+
+    $('.exercise-button-5').on('click', function () {
+        const $target = $('.exercise-5-text');
+
+        if ($target.is(':visible')) {
+            $target.slideUp();
+        } else {
+            $target.slideDown();
+        }
+    });
+
+    $('.exercise-6-button').on('click', function () {
+        const $btn = $(this);
+        const $target = $(this).next('.exercise-6-list');
+
+        if ($target.is(':visible')) {
+            $target.fadeOut();
+            $btn.text('Open');
+        } else {
+            $target.fadeIn();
+            $btn.text('Close');
+        }
+    });
+
+    $('.exercise-7-button').on('click', function () {
+        const $list = $(this).next('.exercise-7-list');
+        const count = $list.find('li').length;
+
+        if (count < 20) {
+            for (let i = 0; i < 4; i++) {
+                $list.append(`<li>New item #${count + i + 1}</li>`);
+            }
+        } else {
+            $list.empty();
+        }
+    });
 </script>
 </body>
 </html>
