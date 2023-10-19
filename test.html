@@ -4,36 +4,180 @@
     <meta charset="UTF-8">
     <title>Test</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
     <script src="src/generator.js"></script>
 </head>
 <body>
-    <div id="exercise-1" class="exercise">
-        <div class="answer" data-trigger="button">
-            <p class="exercise-1-text">Original text</p>
-            <button class="button-1">Click me to change text</button>
+<div id="exercise-1" class="exercise">
+    <div class="answer" data-trigger="button">
+        <p class="exercise-1-text">Original text</p>
+        <button class="button-1">Click me to change text</button>
+    </div>
+</div>
+
+<div id="exercise-2" class="exercise">
+    <div class="answer" data-trigger="button">
+        <img class="exercise-2-img" src="https://cdn-icons-png.flaticon.com/128/2004/2004580.png"/>
+        <div>
+            <button>Toggle image visibility</button>
         </div>
     </div>
+</div>
 
-    <script>
-        const exercises = {
-            items: [
-                {
-                    title: 'Exercise 1: Change text',
-                    description: `
-                        <div>When the button is clicked, use jQuery to change the text of the paragraph from "Original text" to "Text changed"</div>
-                    `,
-                    type: 'html',
-                    validate: ($answer) => $answer.find('.exercise-1-text').text() === 'Text changed'
+<div id="exercise-3" class="exercise">
+    <div class="answer" data-trigger="button">
+        <button class="btn btn-primary">Toggle button class</button>
+    </div>
+</div>
+
+<div id="exercise-4" class="exercise">
+    <div class="answer" data-trigger="button">
+        <div>
+            Counter: <span class="exercise-4-counter">0</span>
+        </div>
+        <button>- Decrease</button>
+        <button>+ Increase</button>
+    </div>
+</div>
+
+<div id="exercise-5" class="exercise">
+    <div class="answer" data-trigger="button">
+        <button>Toggle slide animation</button>
+        <div class="exercise-5-text bg-warning mt-1">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus risus convallis nulla mollis molestie. In suscipit quam vitae blandit tincidunt. Duis volutpat varius felis, ac dignissim massa mollis placerat. Sed ipsum erat, pellentesque luctus pharetra vel, iaculis in mauris. Fusce non lectus non neque tristique varius id id lectus. Nulla justo sem, bibendum ac malesuada vitae, gravida ac dolor. Praesent accumsan sapien eget elementum lacinia. Duis rhoncus, tellus in tincidunt hendrerit, velit dui molestie augue, vitae placerat erat mauris id velit. Mauris arcu nisl, aliquet sit amet leo vitae, malesuada placerat leo. Proin massa enim, bibendum et elementum quis, pellentesque ut tortor. Sed ac convallis justo. Nullam eu feugiat tellus.
+        </div>
+    </div>
+</div>
+
+<div id="exercise-6" class="exercise">
+    <div class="answer" data-trigger="button">
+        <div class="container">
+            <div class="row gap-2">
+                <div class="col">
+                    <button>Close</button>
+                    <ul class="bg-warning mt-2">
+                        <li>Item 1</li>
+                        <li>Item 2</li>
+                        <li>Item 3</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <button>Close</button>
+                    <ul class="bg-warning mt-2">
+                        <li>Item 1</li>
+                        <li>Item 2</li>
+                        <li>Item 3</li>
+                        <li>Item 4</li>
+                        <li>Item 5</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <button>Close</button>
+                    <ul class="bg-warning mt-2">
+                        <li>Item 1</li>
+                        <li>Item 2</li>
+                        <li>Item 3</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="exercise-7" class="exercise">
+    <div class="answer" data-trigger="button">
+        <button>Add new elements</button>
+        <ol class="exercise-7-list bg-warning mt-1">
+        </ol>
+    </div>
+</div>
+
+<!-- IMPORTANT: DO NOT EDIT -->
+<script>
+    const exercises = {
+        items: [
+            {
+                title: 'Change text',
+                description: `
+                <div>When the button is clicked, use jQuery to change the text of the paragraph from <code>Original text</code> to <code>Text changed</code></div>
+                `,
+                validate: ($answer) => $answer.find('.exercise-1-text').text() === 'Text changed'
+            },
+            {
+                title: 'Hide and show',
+                description: `
+                <div>When the button is clicked, use jQuery to hide the image, and when clicked again, show the image.</div>
+                `,
+                beforeValidate($answer) {
+                    return {
+                        prevVisible: $answer.find('.exercise-2-img').is(':visible')
+                    };
+                },
+                validate($answer, { data }) {
+                    return $answer.find('.exercise-2-img').is(':visible') !== data.prevVisible;
                 }
-            ]
-        }
-        window.createExercises(exercises);
+            },
+            {
+                title: 'Toggle element class',
+                description: `
+                <div>When the button is clicked, toggle its class in this order <code>btn-primary</code> > <code>btn-secondary</code> > <code>btn-danger</code> > <code>btn-warning</code> then go back to <code>btn-primary</code></div>
+                `,
+                validate($answer) {
+                }
+            },
+            {
+                title: 'Simple event handling',
+                description: `
+                <div>Each time the buttons are clicked, use jQuery to increment or decrement the counter and update the counter's text.</div>
+                `,
+                validate($answer, { data }) {
+                }
+            },
+            {
+                title: 'Slide toggle animation',
+                description: `
+                <div>Each time the button is clicked, toggle the slide animation of the <code>div</code> below.</div>
+                `,
+                searchPhrases: [
+                    'Slide animation using jQuery'
+                ],
+                validate($answer) {
+                }
+            },
+            {
+                title: 'Dropdown list',
+                description: `
+                <div>Each time the button is clicked, toggle the fade animation of the list <code>ul</code> next to that button. When the list is visible, the button text should be "Close" and when the list is invisible, the button text should be "Open"</div>
+                `,
+                searchPhrases: [
+                    'Fade animation using jQuery'
+                ],
+                validate($answer) {
+                }
+            },
+            {
+                title: 'For...loop to create elements',
+                description: `
+                <div>When the total <code>li</code> elements in the <code>ul</code> is less than 20. The button text should be "Add new elements". When the button is clicked, append 4 <code>li</code> elements with the content "New item #number" to the <code>ul</code> next to it.</div>
+                <div>When the total <code>li</code> elements is greater or equal 20, the button text should change to "Destroy" and clicking the button will remove all the <code>li</code> inside the <code>ul</code></div>
+                `,
+                searchPhrases: [
+                    'Append new element using jquery" and "Remove element using jquery'
+                ],
+                validate($answer) {
+                }
+            }
+        ]
+    };
 
-        $('.button-1').on('click', function () {
-            $('.exercise-1-text').text('Text changed');
-        });
-    </script>
+    window.createExercises(exercises);
+</script>
+
+<script>
+
+</script>
 </body>
 </html>

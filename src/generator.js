@@ -20,10 +20,10 @@ window.createExercises = (options) => {
         `);
 
         const $item = $(`
-         <div class="accordion-item">
+         <div class="accordion-item mt-4">
             <h2 class="accordion-header">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${id}">
-                <span class="fs-3">${item.title}</span>
+                <span class="fs-3"><u>Exercise ${idx + 1}</u>: ${item.title}</span>
               </button>
             </h2>
             <div id="collapse-${id}" class="accordion-collapse collapse show">
@@ -36,9 +36,23 @@ window.createExercises = (options) => {
 
         const $itemContent = $item.find('.accordion-body');
 
-        if (item.type === 'html') {
+        if (item.note) {
             $itemContent.append(`
-                <div class="alert alert-warning mt-3"><span class="text-decoration-underline fst-italic me-2">Tips</span>This exercise requires you to modify the HTML of <b>${id} - answer element</b></div>
+                <div class="alert alert-warning mt-3">
+                    <span class="text-decoration-underline fst-italic me-2">Tips</span>
+                    ${item.note}
+                </div>
+            `);
+        }
+
+        if (item.searchPhrases) {
+            $itemContent.append(`
+                <div class="alert alert-info mt-3 search-phrases">
+                    <div class="text-muted fst-italic me-2">Use <b>Google</b> or <b>Open AI</b> to search for:</div>
+                    <ol class="m-0 mt-2">
+                        ${item.searchPhrases.map((pharse) => `<li>${pharse}</li>`)}                                            
+                    </ol>
+                </div>
             `);
         }
 
@@ -59,8 +73,21 @@ window.createExercises = (options) => {
         const $answer = $content.find('.answer');
         const triggerSelector = $answer.attr('data-trigger') || '.submit';
 
-        $answer.find(triggerSelector).on('click', debounce(() => {
-            const result = item.validate($answer);
+        // Add mask to prevent multi clicks
+        $answer.addClass('position-relative').append('<div class="mask bg-light opacity-25 d-none position-absolute top-0 bottom-0 start-0 end-0" style="z-index:9999;"/>');
+        const $mask = $answer.find('.mask');
+
+        let validationData;
+
+        if (item.beforeValidate) {
+            $answer.find(triggerSelector).on('click', (event) => {
+                validationData = item.beforeValidate($answer, { event });
+                $mask.removeClass('d-none');
+            });
+        }
+
+        $answer.find(triggerSelector).on('click', debounce((event) => {
+            const result = item.validate($answer, { event, data: validationData });
 
             $feedback.hide();
 
@@ -77,7 +104,9 @@ window.createExercises = (options) => {
                     .text('Oops! It does not look right! Try again :D')
                     .fadeIn();
             }
-        }, 200));
+
+            $mask.addClass('d-none');
+        }, item.validateDelay || 200));
 
         return $item;
     }
