@@ -76,10 +76,11 @@ export default function processValidation(item, $itemContent, $answer) {
             $mask.removeClass('d-none');
 
             prepareData();
-            data.fn.error = false;
 
             // Set result input value
             if (item.data && item.data.type === 'function' && $.isFunction(data.fn.execute)) {
+                data.fn.error = false;
+
                 const args = data.fn.args.map((arg) => {
                     try {
                         return JSON.parse(arg.value);
