@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack --mode production --progress --color --stats-error-details",
-    "watch": "webpack --mode development --progress --color --watch --stats-error-details"
+    "watch": "webpack --mode development --devtool eval-source-map --progress --color --watch --stats-error-details"
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",

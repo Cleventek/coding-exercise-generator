@@ -1,15 +1,15 @@
 import $ from "jquery";
 import processValidation from './validation';
+import buildContent from './content';
 
 export function buildItem(item, idx) {
     const id = item.id || `exercise-${idx + 1}`;
+    const $description = buildContent(item.description);
     let $content = $(`#${id}`);
 
-    $content = $content.length ? $content : $(`
-            <div id="${id}" class="exercise">
-                <div class="answer" data-trigger=".submit"/>
-            </div>
-        `);
+    $content = $content.length
+        ? $content
+        : $(`<div id="${id}" class="exercise"><div class="answer" data-trigger=".submit"/></div>`);
 
     const $item = $(`
          <div class="accordion-item mt-4">
@@ -19,14 +19,16 @@ export function buildItem(item, idx) {
               </button>
             </h2>
             <div id="collapse-${id}" class="accordion-collapse collapse show">
-              <div class="accordion-body">
-                <div>${item.description}</div>
-              </div>
+              <div class="accordion-body" />
             </div>
           </div>
         `);
 
     const $itemContent = $item.find('.accordion-body');
+
+    if ($description && $description.length) {
+        $itemContent.append($description);
+    }
 
     if (item.note) {
         $itemContent.append(`
@@ -54,6 +56,7 @@ export function buildItem(item, idx) {
 
     $itemContent.append('<div class="fw-bold mt-3">Answer</div>')
     $content.addClass('border mt-2 p-2 bg-light');
+
     $content.appendTo($itemContent);
 
     $itemContent.append(`

@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import buildAnswer from './answer-generator';
 
 const debounce = (func, delay) => {
     let timeoutId;
@@ -34,13 +35,76 @@ export default function processValidation(item, $itemContent, $answer) {
             .fadeIn();
     };
     const data = {};
+    const prepareData = () => {
+        const $fnResult = $answer.find('[data-fn-result]');
+
+        if ($fnResult.length) {
+            data.fn = data.fn || { error: false };
+            data.fn.execute = window[item.data.options.name];
+            data.fn.args = [];
+
+            $answer.find('[data-fn-input]').each(function () {
+                const $input = $(this);
+
+                data.fn.args.push({
+                    $el: $input,
+                    name: $input.attr('data-fn-input'),
+                    value: $input.val().trim()
+                });
+            });
+
+            data.fn.result = {
+                $el: $fnResult,
+                name: 'result',
+                value: $fnResult.val().trim()
+            };
+        }
+
+        return data;
+    };
+
+    if (item.data) {
+        const $answerData = buildAnswer(item.data, $answer, data);
+
+        if ($answerData && $answerData.length) {
+            $answer.append($answerData);
+        }
+    }
 
     $answer.find(triggerSelector)
         .on('click', (event) => {
             $mask.removeClass('d-none');
 
+            prepareData();
+            data.fn.error = false;
+
+            // Set result input value
+            if (item.data && item.data.type === 'function' && $.isFunction(data.fn.execute)) {
+                const args = data.fn.args.map((arg) => {
+                    try {
+                        return JSON.parse(arg.value);
+                    } catch (e) {}
+
+                    return arg.value;
+                });
+
+                try {
+                    let value = data.fn.execute(...args);
+
+                    if ($.isPlainObject(value) || $.isArray(value)) {
+                        value = JSON.stringify(value, null,  4);
+                    }
+
+                    data.fn.result.$el.val(value.toString());
+                } catch (e) {
+                    data.fn.error = e.message;
+                    data.fn.result.$el.val('ERROR');
+                }
+
+            }
+
             if ($.isPlainObject(item.test) && $.isFunction(item.test.before)) {
-                item.test.before($answer, {event, data});
+                item.test.before($answer, { event, data });
             }
         })
         .on('click', debounce((event) => {
@@ -56,7 +120,12 @@ export default function processValidation(item, $itemContent, $answer) {
 
             if ($.isFunction(test)) {
                 try {
-                    const result = test($answer, { event, data });
+                    if (item.data && item.data.type === 'function') {
+                        expect($.isFunction(data.fn.execute), `Oops! Have you created the function <code>${item.data.options.name}</code> ???`).to.equal(true);
+                        expect(data.fn.error, data.fn.error).to.equal(false);
+                    }
+
+                    const result = test($answer, { event, data: prepareData() });
 
                     if (result === true || typeof result === 'undefined') {
                         showFeedback('success', messages.success);
@@ -67,6 +136,10 @@ export default function processValidation(item, $itemContent, $answer) {
                     const message = e.message;
 
                     showFeedback('error', message.indexOf('default:') === 0 ? messages.error : message);
+                }
+
+                if (item.data && item.data.type === 'function') {
+                    data.fn.error = false;
                 }
             } else {
                 console.log(`test validation has not been setup for ${item.title}`);

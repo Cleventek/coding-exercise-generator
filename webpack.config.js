@@ -2,7 +2,6 @@ const path = require('path');
 
 module.exports = {
     context: path.resolve(__dirname, 'src'),
-    devtool: 'eval-source-map',
     entry: {
         index: './index.js'
     },
