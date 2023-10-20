@@ -11,6 +11,19 @@ const debounce = (func, delay) => {
     };
 };
 
+const formatValue = (value) => {
+    if ($.isPlainObject(value) || $.isArray(value)) {
+        value = JSON.stringify(value, null,  4);
+    }
+
+    if (typeof value === 'undefined' || value === null) {
+        value = '';
+    }
+
+    return value;
+}
+const originalConsoleLog = console.log;
+
 export default function processValidation(item, $itemContent, $answer) {
     const $feedback = $itemContent.find('.exercise-feedback');
     const triggerSelector = $answer.attr('data-trigger') || '.submit';
@@ -36,28 +49,30 @@ export default function processValidation(item, $itemContent, $answer) {
     };
     const data = {};
     const prepareData = () => {
-        const $fnResult = $answer.find('[data-fn-result]');
+        if (item.data && item.data.type === 'function') {
+            const $fnResult = $answer.find('[data-fn-result]');
 
-        if ($fnResult.length) {
-            data.fn = data.fn || { error: false };
-            data.fn.execute = window[item.data.options.name];
-            data.fn.args = [];
+            if ($fnResult.length) {
+                data.fn = data.fn || { error: false };
+                data.fn.execute = window[item.data.options.name];
+                data.fn.args = [];
 
-            $answer.find('[data-fn-input]').each(function () {
-                const $input = $(this);
+                $answer.find('[data-fn-input]').each(function () {
+                    const $input = $(this);
 
-                data.fn.args.push({
-                    $el: $input,
-                    name: $input.attr('data-fn-input'),
-                    value: $input.val().trim()
+                    data.fn.args.push({
+                        $el: $input,
+                        name: $input.attr('data-fn-input'),
+                        value: $input.val().trim()
+                    });
                 });
-            });
 
-            data.fn.result = {
-                $el: $fnResult,
-                name: 'result',
-                value: $fnResult.val().trim()
-            };
+                data.fn.result = {
+                    $el: $fnResult,
+                    name: 'result',
+                    value: $fnResult.html().trim()
+                };
+            }
         }
 
         return data;
@@ -89,24 +104,49 @@ export default function processValidation(item, $itemContent, $answer) {
                     return arg.value;
                 });
 
+                data.fn.result.$el.html('');
+
                 try {
+                    // Hijack console.log to print result
+                    console.log = (...args) => {
+                        originalConsoleLog.apply(console, args);
+
+                        args.forEach((arg) => {
+                            const argValue = formatValue(arg);
+
+                            data.fn.result.$el.html(
+                                data.fn.result.$el.html() +
+                                `<div>${argValue.toString()}</div>`
+                            )
+                        });
+                    };
+
                     let value = data.fn.execute(...args);
 
-                    if ($.isPlainObject(value) || $.isArray(value)) {
-                        value = JSON.stringify(value, null,  4);
-                    }
+                    value = formatValue(value);
 
-                    data.fn.result.$el.val(value.toString());
+                    data.fn.result.$el.html(
+                        data.fn.result.$el.html() + value.toString()
+                    );
                 } catch (e) {
                     data.fn.error = e.message;
-                    data.fn.result.$el.val('ERROR');
+                    data.fn.result.$el.html('ERROR');
                 }
 
+                console.log = originalConsoleLog;
             }
 
             if ($.isPlainObject(item.test) && $.isFunction(item.test.before)) {
                 item.test.before($answer, { event, data });
             }
+
+            window.__tempTestData = {
+                $answer,
+                options: {
+                    event,
+                    data
+                },
+            };
         })
         .on('click', debounce((event) => {
             $feedback.hide();
@@ -119,14 +159,25 @@ export default function processValidation(item, $itemContent, $answer) {
                 test = item.test;
             }
 
+            prepareData();
+
+            window.__tempTestData = {
+                $answer,
+                options: {
+                    event,
+                    data
+                },
+            };
+
             if ($.isFunction(test)) {
                 try {
                     if (item.data && item.data.type === 'function') {
                         expect($.isFunction(data.fn.execute), `Oops! Have you created the function <code>${item.data.options.name}</code> ???`).to.equal(true);
                         expect(data.fn.error, data.fn.error).to.equal(false);
+                        expect(data.fn.result.value, `Oops! Your function <code>${item.data.options.name}</code> does not <code>return</code> anything`).to.not.equal('');
                     }
 
-                    const result = test($answer, { event, data: prepareData() });
+                    const result = test($answer, { event, data });
 
                     if (result === true || typeof result === 'undefined') {
                         showFeedback('success', messages.success);
@@ -143,7 +194,7 @@ export default function processValidation(item, $itemContent, $answer) {
                     data.fn.error = false;
                 }
             } else {
-                console.log(`test validation has not been setup for ${item.title}`);
+                console.error(`test validation has not been setup for ${item.title}`);
             }
 
             $mask.addClass('d-none');

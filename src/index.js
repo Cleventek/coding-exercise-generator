@@ -27,3 +27,10 @@ window.createExercises = (options) => {
         $accordion.append($item);
     });
 };
+
+setTimeout(() => {
+    if (typeof window.exercises !== 'undefined') {
+        window.createExercises(window.exercises);
+    }
+}, 10);
+

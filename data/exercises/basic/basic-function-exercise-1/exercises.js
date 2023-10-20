@@ -18,13 +18,13 @@ function yourFunctionName(argument1, argument2) {
     ],
     items: [
         {
-            title: 'sayHello(x, y) function',
+            title: 'sayHello(name) function',
             description: [
                 '<div>Create a function that will return <code>Hello {name}!</code></div>',
                 {
                     type: 'list',
                     data: {
-                        name: 'add',
+                        name: 'sayHello',
                         arguments: {
                             type: 'list',
                             data: {
@@ -57,7 +57,7 @@ function yourFunctionName(argument1, argument2) {
                 const { args, result } = data.fn;
                 const name = args[0].value;
 
-                expect(result.value).to.equal(`Hello ${name}`);
+                expect(result.value).to.equal(`Hello ${name}!`);
             }
         },
         {
@@ -172,7 +172,6 @@ function yourFunctionName(argument1, argument2) {
                             type: 'list',
                             data: {
                                 num: 'number',
-                                y: 'number'
                             }
                         },
                         return: '<code>true</code> if <code>num</code> is greater than <code>10</code> and <code>false</code> otherwise'
@@ -369,6 +368,65 @@ function yourFunctionName(argument1, argument2) {
                 const sentence = args[0].value;
 
                 expect(sentence.length).to.equal(parseInt(data.fn.result.value, 10));
+            }
+        },
+        {
+            title: 'multiplicationTable(number) function',
+            description: [
+                '<div>Create function that takes a number and <code>console.log</code> the multiplication table of that number</div>',
+                {
+                    type: 'list',
+                    data: {
+                        name: 'multiplicationTable',
+                        arguments: {
+                            type: 'list',
+                            data: {
+                                number: 'number',
+                            }
+                        }
+                    }
+                },
+                {
+                    type: 'code',
+                    title: 'Example code',
+                    content: `multiplicationTable(3); // will print
+// 3 * 1 = 3
+// 3 * 2 = 6
+// 3 * 3 = 9
+// 3 * 4 = 12
+// 3 * 5 = 15
+// 3 * 6 = 18
+// 3 * 7 = 21
+// 3 * 8 = 24
+// 3 * 9 = 27
+`
+                }
+            ],
+            data: {
+                type: 'function',
+                options: {
+                    name: 'multiplicationTable',
+                    arguments: [
+                        {
+                            name: 'number',
+                            defaultValue: 3,
+                        }
+                    ],
+                }
+            },
+            test: ($answer, { data }) => {
+                const { args, result } = data.fn;
+                const number = parseInt(args[0].value, 10);
+                const $results = result.$el.find('div');
+
+                expect($results.length, `Your multiple table needs to print from <code>${number} * 1</code> to <code>${number} * 9</code>`).to.equal(9);
+
+                $results.each(function (index) {
+                    const value = $(this).html().trim();
+                    const idx = index + 1;
+
+                    expect(value).to.equal(`${number} * ${idx} = ${number * idx}`);
+                });
             }
         }
     ]

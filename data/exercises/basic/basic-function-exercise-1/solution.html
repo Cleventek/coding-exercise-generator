@@ -11,11 +11,9 @@
 <script src="exercises.js"></script>
 <script src="../../../../dist/index.js"></script>
 <script>
-    window.createExercises(exercises);
-
     // Exercise work
     function sayHello(name) {
-        return 'Hello ' + name;
+        return 'Hello ' + name + '!';
     }
 
     function add(x, y) {
@@ -56,6 +54,12 @@
 
     function getLength(sentence) {
         return sentence.length;
+    }
+
+    function multiplicationTable(number) {
+        for (let i = 1; i <= 9; i++) {
+            console.log(`${number} * ${i} = ${number * i}`);
+        }
     }
 </script>
 </body>

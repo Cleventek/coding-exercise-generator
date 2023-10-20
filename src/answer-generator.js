@@ -13,6 +13,8 @@ export default function buildAnswer(generatorOptions, $answer, validationData) {
     const { type, options } = generatorOptions;
 
     if (type === 'function') {
+        const text = options.return ? 'returns' : 'prints';
+
         $content.append(`
             <div class="p-3">
                 <div class="mb-3 text-decoration-underline">Your method</div>
@@ -22,8 +24,8 @@ export default function buildAnswer(generatorOptions, $answer, validationData) {
                         return `<textarea data-fn-input="${arg.name}" ${getTextareaProps(arg.name, options.row)}>${arg.defaultValue || ''}</textarea>`;            
                     })}
                     <div/>)</div>
-                    <div class="ps-2 text-dark fs-6">returns</div>
-                    <textarea data-fn-result="result" readonly ${getTextareaProps('Result', options.row)}></textarea>
+                    <div class="ps-2 text-dark fs-6">${text}</div>
+                    <div data-fn-result="result" class="form-control d-inline-block w-auto" style="min-width: 200px; min-height: 38px;"></div>
                 </code>
                 <button class="btn btn-primary submit px-4">Submit</button>
             </div>
