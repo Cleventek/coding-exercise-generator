@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JQuery Exercise - 1</title>
+    <meta name="robots" content="noindex">
+</head>
+<body>
+<div id="exercise-1" class="exercise">
+    <div class="answer" data-trigger="button">
+        <p class="exercise-1-text">Original text</p>
+        <button class="exercise-button-1">Click me to change text</button>
+    </div>
+</div>
+
+<div id="exercise-2" class="exercise">
+    <div class="answer" data-trigger="button">
+        <img class="exercise-2-img" src="https://cdn-icons-png.flaticon.com/128/2004/2004580.png"/>
+        <div>
+            <button class="exercise-button-2">Toggle image visibility</button>
+        </div>
+    </div>
+</div>
+
+<div id="exercise-3" class="exercise">
+    <div class="answer" data-trigger="button">
+        <button class="exercise-button-3 btn btn-primary">Toggle button class</button>
+    </div>
+</div>
+
+<div id="exercise-4" class="exercise">
+    <div class="answer" data-trigger="button">
+        <div>
+            Counter: <span class="exercise-4-counter">0</span>
+        </div>
+        <button class="exercise-button-4-decrease">- Decrease</button>
+        <button class="exercise-button-4-increase">+ Increase</button>
+    </div>
+</div>
+
+<div id="exercise-5" class="exercise">
+    <div class="answer" data-trigger="button">
+        <button class="exercise-button-5">Toggle slide animation</button>
+        <div class="exercise-5-text bg-warning mt-1">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus risus convallis nulla mollis molestie. In suscipit quam vitae blandit tincidunt. Duis volutpat varius felis, ac dignissim massa mollis placerat. Sed ipsum erat, pellentesque luctus pharetra vel, iaculis in mauris. Fusce non lectus non neque tristique varius id id lectus. Nulla justo sem, bibendum ac malesuada vitae, gravida ac dolor. Praesent accumsan sapien eget elementum lacinia. Duis rhoncus, tellus in tincidunt hendrerit, velit dui molestie augue, vitae placerat erat mauris id velit. Mauris arcu nisl, aliquet sit amet leo vitae, malesuada placerat leo. Proin massa enim, bibendum et elementum quis, pellentesque ut tortor. Sed ac convallis justo. Nullam eu feugiat tellus.
+        </div>
+    </div>
+</div>
+
+<div id="exercise-6" class="exercise">
+    <div class="answer" data-trigger="button">
+        <div class="container">
+            <div class="row gap-2">
+                <div class="col">
+                    <button class="exercise-6-button">Close</button>
+                    <ul class="exercise-6-list bg-warning mt-2">
+                        <li>Item 1</li>
+                        <li>Item 2</li>
+                        <li>Item 3</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <button class="exercise-6-button">Close</button>
+                    <ul class="exercise-6-list bg-warning mt-2">
+                        <li>Item 1</li>
+                        <li>Item 2</li>
+                        <li>Item 3</li>
+                        <li>Item 4</li>
+                        <li>Item 5</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <button class="exercise-6-button">Close</button>
+                    <ul class="exercise-6-list bg-warning mt-2">
+                        <li>Item 1</li>
+                        <li>Item 2</li>
+                        <li>Item 3</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="exercise-7" class="exercise">
+    <div class="answer" data-trigger="button">
+        <button class="exercise-7-button">Add new elements</button>
+        <ol class="exercise-7-list bg-warning mt-1">
+        </ol>
+    </div>
+</div>
+
+<!-- IMPORTANT: DO NOT EDIT -->
+<script src="exercises.js"></script>
+<script src="../../../dist/index.js"></script>
+<script>
+    window.createExercises(exercises);
+
+    $('.exercise-button-1').on('click', function () {
+        $('.exercise-1-text').text('Text changed');
+    });
+
+    $('.exercise-button-2').on('click', function () {
+        const $img = $('.exercise-2-img');
+
+        if ($img.is(':visible')) {
+            $img.hide();
+        } else {
+            $img.show();
+        }
+    });
+
+    $('.exercise-button-3').on('click', function () {
+        const $button = $(this);
+
+        if ($button.hasClass('btn-primary')) {
+            $button
+                .removeClass('btn-primary')
+                .addClass('btn-secondary');
+        } else if ($button.hasClass('btn-secondary')) {
+            $button
+                .removeClass('btn-secondary')
+                .addClass('btn-danger');
+        } else if ($button.hasClass('btn-danger')) {
+            $button
+                .removeClass('btn-danger')
+                .addClass('btn-warning');
+        } else if ($button.hasClass('btn-warning')) {
+            $button
+                .removeClass('btn-warning')
+                .addClass('btn-primary');
+        }
+    });
+
+    $('.exercise-button-4-decrease').on('click', function () {
+        const $counter = $('.exercise-4-counter');
+        const currentCount = parseInt($counter.text(), 10);
+
+        $counter.text(currentCount - 1);
+    });
+
+    $('.exercise-button-4-increase').on('click', function () {
+        const $counter = $('.exercise-4-counter');
+        const currentCount = parseInt($counter.text(), 10);
+
+        $counter.text(currentCount + 1);
+    });
+
+    $('.exercise-button-5').on('click', function () {
+        const $target = $('.exercise-5-text');
+
+        if ($target.is(':visible')) {
+            $target.slideUp();
+        } else {
+            $target.slideDown();
+        }
+    });
+
+    $('.exercise-6-button').on('click', function () {
+        const $btn = $(this);
+        const $target = $(this).next('.exercise-6-list');
+
+        if ($target.is(':visible')) {
+            $target.fadeOut();
+            $btn.text('Open');
+        } else {
+            $target.fadeIn();
+            $btn.text('Close');
+        }
+    });
+
+    $('.exercise-7-button').on('click', function () {
+        const $btn = $(this);
+        const $list = $btn.next('.exercise-7-list');
+        const count = $list.find('li').length;
+
+        if (count < 20) {
+            for (let i = 0; i < 4; i++) {
+                $list.append(`<li>New item #${count + i + 1}</li>`);
+            }
+
+            if (count + 4 >= 20) {
+                $btn.text('Destroy');
+            }
+        } else {
+            $list.empty();
+            $btn.text('Add new elements');
+        }
+    });
+</script>
+</body>
+</html>
