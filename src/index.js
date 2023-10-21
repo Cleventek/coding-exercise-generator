@@ -38,7 +38,7 @@ window.createExercises = (options) => {
                 activeExercise.scrollIntoView();
             }
         }
-    }, 10);
+    }, 500);
 };
 
 setTimeout(() => {
