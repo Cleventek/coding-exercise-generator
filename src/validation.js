@@ -29,22 +29,36 @@ export default function processValidation(item, $itemContent, $answer) {
     const triggerSelector = $answer.attr('data-trigger') || '.submit';
     const $mask = $answer.find('.mask');
     const messages = {
-        success: 'Woo hoo! You get it right! Awesome',
-        error: 'Oops! It does not look right! Try again :D'
+        success: `<div class="fs-3">WOO HOO!</div><div>You got it right!</div>`,
+        error: `<div class="fs-3">OOPS!</div><div>It does not look right! Let's try again!</div>`
     };
     const showFeedback = (type, message) => {
         let removedClasses = 'alert-success alert-info';
+        const $content = $('<div class="d-flex align-items-center fw-bold p-3" style="margin: -16px;" />');
+        const $message = $('<div />').html(message);
+
+        $content.append($message);
 
         if (type === 'info') {
             removedClasses = 'alert-danger alert-success';
+
         } else if (type === 'success') {
             removedClasses = 'alert-danger alert-info';
+
+            $content.css('background-image', 'url(https://i.gifer.com/6ob.gif)');
+            $content.append('<img src="https://media.tenor.com/hrju_XcBAmYAAAAi/funny-dance.gif" style="height: 80px" />');
+        } else {
+            removedClasses = 'alert-success alert-info';
+
+            // $content.css('background-image', 'url(https://i.gifer.com/4m3f.gif)');
+            $content.append('<img src="https://i.gifer.com/4m3f.gif" style="height: 80px" />');
         }
 
         $feedback
             .removeClass(removedClasses)
             .addClass(`alert-${type === 'error' ? 'danger' : type}`)
-            .html(message)
+            .empty()
+            .append($content)
             .fadeIn();
     };
     const data = {};

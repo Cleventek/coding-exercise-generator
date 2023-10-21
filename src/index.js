@@ -26,6 +26,15 @@ window.createExercises = (options) => {
 
         $accordion.append($item);
     });
+
+    setTimeout(() => {
+        if (
+            typeof window.currentActiveExercise !== 'undefined' &&
+            window.currentActiveExercise > 0 && window.currentActiveExercise < options.items.length
+        ) {
+            window.location.href = `#execersie--${window.currentActiveExercise}`;
+        }
+    }, 10);
 };
 
 setTimeout(() => {

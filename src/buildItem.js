@@ -12,7 +12,7 @@ export function buildItem(item, idx) {
         : $(`<div id="${id}" class="exercise"><div class="answer" data-trigger=".submit"/></div>`);
 
     const $item = $(`
-         <div class="accordion-item mt-4">
+         <div id="execersie--${idx + 1}" class="accordion-item mt-4">
             <h2 class="accordion-header">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${id}">
                 <span class="fs-3"><u>Exercise ${idx + 1}</u>: ${item.title}</span>
