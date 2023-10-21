@@ -32,7 +32,11 @@ window.createExercises = (options) => {
             typeof window.currentActiveExercise !== 'undefined' &&
             window.currentActiveExercise > 0 && window.currentActiveExercise < options.items.length
         ) {
-            window.location.href = `#execersie--${window.currentActiveExercise}`;
+            const activeExercise = document.querySelector(`#execersie--${window.currentActiveExercise}`);
+
+            if (activeExercise) {
+                activeExercise.scrollIntoView();
+            }
         }
     }, 10);
 };
