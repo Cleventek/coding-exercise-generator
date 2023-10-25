@@ -2,8 +2,9 @@ import $ from 'jquery';
 import { expect } from 'chai';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
+import './jquery.bindFirst';
 import {buildItem} from './buildItem';
-import buildContent from "./content";
+import buildContent from './content';
 
 window.jQuery = $;
 window.$ = $;

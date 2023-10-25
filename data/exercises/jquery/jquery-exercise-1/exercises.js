@@ -172,11 +172,11 @@ window.exercises = {
         },
         {
             title: 'For...loop to create elements',
-            description: `
+            description: [`
                 <div>When the total <code>li</code> elements in the <code>ul</code> is less than 20.
                     <ol>
                         <li>The button text should be <code>Add new elements</code>.</li>
-                        <li>When the button is clicked, append 4 <code>li</code> elements with the content "New item #number" to the <code>ul</code> list next to it.</li>
+                        <li>When the button is clicked, append 4 <code>li</code> elements with the content <code>"New item #number"</code> (Item #1, Item #2, Item #3...) to the <code>ul</code> list next to it.</li>
                     </ol>
                 </div>
                 <div>When the total <code>li</code> elements is greater or equal 20
@@ -184,8 +184,18 @@ window.exercises = {
                         <li>the button text should change to <code>Destroy</code></li>
                         <li>When the button is clicked, we will remove all the <code>li</code> inside the <code>ul</code></li>                    
                     </ol>
-                </div>
-                `,
+                </div>`,
+                '<div><b>Example</b></div>',
+                {
+                    type: 'list',
+                    data: [
+                        'There is no item so clicking "Add new item" will create 4 new <code>li</code> elements Item 1, Item 2, Item 3, Item 4',
+                        'Clicking "Add new item" again will create 4 new <code>li</code> elements Item 5, Item 6, Item 7, Item 8',
+                        'When the number <code>li</code> elements reaches 20, the button text is <code>Destroy</code> and clicking the button will clean up',
+                        'Once the list is destroy, the text button will go back <code>Add new item</code>'
+                    ]
+                }
+            ],
             searchPhrases: [
                 'Append new element using jquery',
                 'Remove element using jquery'

@@ -101,7 +101,7 @@ export default function processValidation(item, $itemContent, $answer) {
     }
 
     $answer.find(triggerSelector)
-        .on('click', (event) => {
+        .bindFirst('click', (event) => {
             $mask.removeClass('d-none');
 
             prepareData();
