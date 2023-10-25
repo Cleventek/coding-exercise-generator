@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JQuery Exercise - 1</title>
+    <meta name="robots" content="noindex">
+</head>
+<body>
+<div id="exercise-1" class="exercise">
+    <div class="answer" data-trigger="button">
+        <button data-bs-toggle="modal" data-bs-target="#exercise-1-modal">Open modal</button>
+        <div class="modal fade" id="exercise-1-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">My first modal</h1>
+                    </div>
+                    <div class="modal-body">
+                        This is Bootstrap modal
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close modal</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="exercise-2" class="exercise">
+    <div class="answer" data-trigger="button">
+        <div class="container">
+            <div class="exercise-2-container mb-3 row">
+            </div>
+        </div>
+        <button class="even-btn">Highlight even numbers</button>
+        <button class="odd-btn">Highlight odd numbers</button>
+    </div>
+</div>
+
+<div id="exercise-3" class="exercise">
+    <div class="answer" data-trigger="button">
+        <div class="exercise-3-container container"></div>
+        <button class="exercise-3-btn">Create table</button>
+    </div>
+</div>
+
+<div id="exercise-4" class="exercise">
+    <div class="answer" data-trigger="button">
+        <div class="exercise-4-container bg-white border mb-3">
+            <div class="exercise-4-target bg-primary border text-center" style="width: 80px; height: 80px;"></div>
+        </div>
+        <button>Left</button>
+        <button>Right</button>
+        <button>Left edge</button>
+        <button>Right edge</button>
+        <button>Right edge then Left edge</button>
+    </div>
+</div>
+
+<div id="exercise-5" class="exercise">
+    <div class="answer" data-trigger="button">
+        <div class="exercise-5-container container"></div>
+        <button>Create gallery</button>
+    </div>
+</div>
+
+<!-- IMPORTANT: DO NOT EDIT -->
+<script src="exercises.js"></script>
+<script src="../../../../dist/index.js"></script>
+<script>
+    window.currentActiveExercise = 5;
+
+    for (let i = 0; i < 20; i++) {
+        let className = 'border w-25 py-2 text-center';
+
+        if ((i + 1) % 2) {
+            className += ' exercise-2-item-even';
+        } else {
+            className += ' exercise-2-item-odd';
+        }
+
+        $('.exercise-2-container').append(`<div class="${className}">Item ${i + 1}</div>`);
+    }
+
+    $('.even-btn').on('click', () => {
+        $('.exercise-2-item-even').addClass('bg-primary text-white');
+        $('.exercise-2-item-odd').removeClass('bg-primary text-white');
+    });
+
+    $('.odd-btn').on('click', () => {
+        $('.exercise-2-item-odd').addClass('bg-primary text-white');
+        $('.exercise-2-item-even').removeClass('bg-primary text-white');
+    });
+
+    const exercise3Data = [
+        {
+            name: 'Jack Vo',
+            age: 38,
+            gender: 'M',
+        },
+        {
+            name: 'Yum T.',
+        },
+        {
+            name: 'Alice K.',
+            age: 26,
+            gender: 'F',
+        },
+        {
+            name: 'Valentino Hughes',
+            age: 41,
+            gender: 'M',
+        },
+        {
+            name: 'Alica Keys',
+            gender: 'F'
+        }
+    ];
+
+    $('.exercise-3-btn').on('click', function () {
+        $('.exercise-3-container').empty();
+    });
+</script>
+</body>
+</html>

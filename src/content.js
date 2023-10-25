@@ -14,20 +14,35 @@ const factory = {
         const tag = contentItem.tag || 'ul';
         const $list = $(`<${tag} />`);
 
-        for (const [key, value] of Object.entries(contentItem.data)) {
-            const $li = $('<li />');
+        if ($.isPlainObject(contentItem.data)) {
+            for (const [key, value] of Object.entries(contentItem.data)) {
+                const $li = $('<li />');
 
-            $li.append(`<span class="text-decoration-underline fw-bold me-2">${key}:</span>`);
+                $li.append(`<span class="text-decoration-underline fw-bold me-2">${key}:</span>`);
 
-            build(value, $li);
+                build(value, $li);
 
-            $list.append($li);
+                $list.append($li);
+            }
+        } else if ($.isArray(contentItem.data)) {
+            contentItem.data.forEach((value) => {
+                const $li = $('<li />');
+
+                build(value, $li);
+
+                $list.append($li);
+            });
         }
+
 
         return $list;
     },
     code: (contentItem) => {
-        const $content = $(`<div class="mt-2 p-3 alert alert-dark pb-0"><pre><code>${contentItem.content}</code></pre></div>`);
+        const content = $.isPlainObject(contentItem.constructor) || $.isArray(contentItem.content)
+            ? JSON.stringify(contentItem.content, null, 4)
+            : contentItem.content;
+
+        const $content = $(`<div class="mt-2 p-3 alert alert-dark pb-0"><pre><code>${content}</code></pre></div>`);
 
         if (contentItem.title) {
             $content.prepend(`<div class="fw-bold mb-1">${contentItem.title}</div>`)

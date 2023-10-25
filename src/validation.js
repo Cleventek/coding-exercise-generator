@@ -197,6 +197,8 @@ export default function processValidation(item, $itemContent, $answer) {
                         showFeedback('success', messages.success);
                     } else if (typeof result === 'string') {
                         showFeedback('info', result || `${messages.success}. Let's do the next step.`);
+                    } else if (result === false) {
+                        showFeedback('error', messages.error);
                     }
                 } catch (e) {
                     const message = e.message;

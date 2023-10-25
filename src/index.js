@@ -30,7 +30,7 @@ window.createExercises = (options) => {
     setTimeout(() => {
         if (
             typeof window.currentActiveExercise !== 'undefined' &&
-            window.currentActiveExercise > 0 && window.currentActiveExercise < options.items.length
+            window.currentActiveExercise > 0 && window.currentActiveExercise <= options.items.length
         ) {
             const activeExercise = document.querySelector(`#execersie--${window.currentActiveExercise}`);
 
