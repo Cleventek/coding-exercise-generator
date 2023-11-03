@@ -54,6 +54,15 @@ export function buildItem(item, idx) {
         });
     }
 
+    const $instruction = buildContent(item.instruction);
+
+    if ($instruction && $instruction.length) {
+        const $alert = $(`<div class="alert alert-warning mt-3"><div class="fw-bold text-decoration-underline">Tips</div></div>`);
+
+        $alert.append($instruction);
+        $itemContent.append($alert);
+    }
+
     $itemContent.append('<div class="fw-bold mt-3">Answer</div>')
     $content.addClass('border mt-2 p-2 bg-light');
 

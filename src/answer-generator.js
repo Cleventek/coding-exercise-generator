@@ -8,6 +8,18 @@ function getTextareaProps(name, rows) {
     `;
 }
 
+function getDefaultValue(defaultValue) {
+    if ($.isPlainObject(defaultValue) || $.isArray(defaultValue)) {
+        return JSON.stringify(defaultValue, null, 4);
+    }
+
+    if (typeof defaultValue === 'undefined') {
+        return '';
+    }
+
+    return defaultValue;
+}
+
 export default function buildAnswer(generatorOptions, $answer, validationData) {
     const $content = $('<div />');
     const { type, options } = generatorOptions;
@@ -21,7 +33,7 @@ export default function buildAnswer(generatorOptions, $answer, validationData) {
                 <code class="d-flex flex-wrap align-content-stretch align-items-center fs-5 mb-2 gap-1">
                     <div>${options.name}(</div>
                     ${options.arguments.map((arg) => {
-                        return `<textarea data-fn-input="${arg.name}" ${getTextareaProps(arg.name, options.row)}>${arg.defaultValue || ''}</textarea>`;            
+                        return `<textarea data-fn-input="${arg.name}" ${getTextareaProps(arg.name, arg.rows)}>${getDefaultValue(arg.defaultValue)}</textarea>`;            
                     })}
                     <div/>)</div>
                     <div class="ps-2 text-dark fs-6">${text}</div>

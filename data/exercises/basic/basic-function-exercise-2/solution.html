@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic - Function - Exercise - 1</title>
+    <meta name="robots" content="noindex">
+</head>
+<body>
+
+<!-- IMPORTANT: DO NOT EDIT -->
+<script src="exercises.js"></script>
+<script src="../../../../dist/index.js"></script>
+<script>
+    // Set active exercise to jump to
+    // window.currentActiveExercise = 6;
+
+    // Exercise work
+    function introduceMySelf(name, age) {
+        return `I am ${name}! I am ${age} years old!`;
+    }
+
+    function multiply(x, y) {
+        return x * y;
+    }
+
+    function checkExamResult(score) {
+        if (score >= 50) {
+            return 'Pass'
+        }
+
+        return 'Fail';
+    }
+
+    function printNumbers(number) {
+        for (let i = 1; i <= number; i++) {
+            console.log(i);
+        }
+    }
+
+    function printNames(names) {
+        names.forEach((name) => {
+            console.log(name);
+        });
+    }
+
+    function sum(numbers) {
+        return numbers.reduce((total, currentValue) => total + currentValue, 0);
+    }
+
+    function getArrayAverage(numbers) {
+        return sum(numbers) / numbers.length;
+    }
+</script>
+</body>
+</html>

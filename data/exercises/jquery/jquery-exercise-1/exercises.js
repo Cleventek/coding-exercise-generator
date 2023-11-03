@@ -192,7 +192,7 @@ window.exercises = {
                         'There is no item so clicking "Add new item" will create 4 new <code>li</code> elements Item 1, Item 2, Item 3, Item 4',
                         'Clicking "Add new item" again will create 4 new <code>li</code> elements Item 5, Item 6, Item 7, Item 8',
                         'When the number <code>li</code> elements reaches 20, the button text is <code>Destroy</code> and clicking the button will clean up',
-                        'Once the list is destroy, the text button will go back <code>Add new item</code>'
+                        'Once the list is destroyed, the text button will go back <code>Add new item</code>'
                     ]
                 }
             ],
