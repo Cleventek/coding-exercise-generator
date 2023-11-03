@@ -274,6 +274,78 @@ window.exercises = {
                 });
             }
         },
+        {
+            title: 'findAnimalIndex(animals, animalName) function',
+            description: [
+                '<div>Create a function that receive an array <code>animals</code> and a string <code>animalName</code></div>',
+                '<div>This function will search and return the index of the <code>animalName</code> inside the <code>animals</code> array if found. If not, return <code>Not found</code></div>',
+                {
+                    type: 'list',
+                    data: {
+                        name: 'findAnimalIndex',
+                        arguments: {
+                            type: 'list',
+                            data: {
+                                animals: 'array',
+                                animalName: 'array'
+                            }
+                        },
+                        returns: {
+                            type: 'list',
+                            data: [
+                                'The <code>index</code> of the <code>animalName</code> in the array <code>animals</code>',
+                                '<code>Not found</code> if the <code>animalName</code> does not exist in the array <code>animals</code>',
+                            ]
+                        }
+                    }
+                },
+                {
+                    type: 'code',
+                    title: 'Example code',
+                    content: `findAnimalIndex(['Elephant', 'Lion', 'Eagle'], 'Lion'); // returns 1`
+                }
+            ],
+            instruction: [
+                '<div>To loop through an array, you can use <code>for...</code> loop</div>',
+                {
+                    type: 'code',
+                    content: `for (let i = 0; i < animals.length; i++) { ... }`
+                }
+            ],
+            data: {
+                type: 'function',
+                options: {
+                    name: 'findAnimalIndex',
+                    arguments: [
+                        {
+                            name: 'animals',
+                            rows: 5,
+                            defaultValue: ['Elephant', 'Lion', 'Eagle'],
+                        },
+                        {
+                            name: 'animalName',
+                            defaultValue: 'Lion',
+                        }
+                    ],
+                    return: 'number | string'
+                }
+            },
+            test: ($answer, { data }) => {
+                const { args, result } = data.fn;
+                const animals = JSON.parse(args[0].value);
+
+                expect($.isArray(animals), 'animals is not a valid array').to.equal(true);
+
+                const animalName = args[1].value;
+                const idx = animals.indexOf(animalName);
+
+                if (idx >= 0) {
+                    expect(parseInt(result.value, 10)).to.equal(idx);
+                } else {
+                    expect(result.value).to.equal('Not found');
+                }
+            }
+        },
 
         {
             title: 'sum(numbers) function',

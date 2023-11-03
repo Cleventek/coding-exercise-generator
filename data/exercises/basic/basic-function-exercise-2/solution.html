@@ -43,6 +43,16 @@
         });
     }
 
+    function findAnimalIndex(animals, animalName) {
+        const idx = animals.indexOf(animalName);
+
+        if (idx >= 0) {
+            return idx;
+        }
+
+        return 'Not found';
+    }
+
     function sum(numbers) {
         return numbers.reduce((total, currentValue) => total + currentValue, 0);
     }
