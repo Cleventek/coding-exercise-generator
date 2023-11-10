@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic - Function - Exercise - 3</title>
+    <meta name="robots" content="noindex">
+</head>
+<body>
+
+<!-- IMPORTANT: DO NOT EDIT -->
+<script src="exercises.js"></script>
+<script src="../../../../dist/index.js"></script>
+<script>
+    // Set active exercise to jump to
+    window.currentActiveExercise = 0;
+
+    // Exercise work
+    function greetMe(name, country) {
+        return `Hello, my name is ${name}, I am from ${country}!`;
+    }
+
+    function getSentenceLength(sentence) {
+        return `${sentence} has ${sentence.length} characters`;
+    }
+
+    function add(x, y) {
+        return x + y;
+    }
+
+    function minus(x, y) {
+        return x - y;
+    }
+
+    function multiply(x, y) {
+        return x * y;
+    }
+
+    function divide(x, y) {
+        return x / y;
+    }
+
+    function getAverage(x, y) {
+        return add(x, y) / 2;
+    }
+
+    function printNumbers(numbers) {
+        numbers.forEach(num => console.log(num));
+    }
+
+    function printFavouriteGames(games) {
+        games.forEach((game, idx) => console.log(`${idx + 1}. I love ${game}!`));
+    }
+
+    function getSongNamesLength(songs) {
+        songs.forEach(song => console.log(getSentenceLength(song)));
+    }
+</script>
+</body>
+</html>
